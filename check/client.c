@@ -11,16 +11,10 @@
 #include <unistd.h>
 #include <strings.h>
 
-/* Taille du buffer utilise pour envoyer le fichier
- * en plusieurs blocs
- */
+
 #define BUFFERT 512
 
-/* Commande pou génerer un fichier de test
- * dd if=/dev/urandom of=fichier count=8
- */
 
-/* Declaration des fonctions*/
 int duration (struct timeval *start,struct timeval *stop, struct timeval *delta);
 int create_client_socket (int port, char* ipaddr);
 
@@ -55,7 +49,6 @@ int main (int argc, char**argv){
 	else
 		sz=buffer.st_size;
 
-	//preparation de l'envoie
 	bzero(&buf,BUFFERT);
 
 	if(connect(sfd,(struct sockaddr*)&sock_serv,l)==-1){
@@ -82,9 +75,7 @@ int main (int argc, char**argv){
 		bzero(buf,BUFFERT);
 		n=read(fd,buf,BUFFERT);
 	}
-	//read vient de retourner 0 : fin de fichier
 
-	//pour debloquer le serv
 	m=sendto(sfd,buf,0,0,(struct sockaddr*)&sock_serv,l);
 	gettimeofday(&stop,NULL);
 	duration(&start,&stop,&delta);
@@ -97,7 +88,6 @@ int main (int argc, char**argv){
 	return EXIT_SUCCESS;
 }
 
-/* Fonction permettant le calcul de la durée de l'envoie */
 int duration (struct timeval *start,struct timeval *stop,struct timeval *delta)
 {
 	suseconds_t microstart, microstop, microdelta;
@@ -115,9 +105,7 @@ int duration (struct timeval *start,struct timeval *stop,struct timeval *delta)
 		return 0;
 }
 
-/* Fonction permettant la creation d'un socket
- * Renvoie un descripteur de fichier
- */
+
 int create_client_socket (int port, char* ipaddr){
 	int l;
 	int sfd;
@@ -128,7 +116,6 @@ int create_client_socket (int port, char* ipaddr){
 		return EXIT_FAILURE;
 	}
 
-	//preparation de l'adresse de la socket destination
 	l=sizeof(struct sockaddr_in);
 	bzero(&sock_serv,l);
 
